@@ -1,14 +1,14 @@
 #define l 2
-#define w 2
+#define w 4
 #define cl 1
-#define cw 1
+#define cw 2
 #include <stdio.h>
-float r[l][w] = {{128.0,128.0},
-		{35.0,35.0}};
-float g[l][w] = {{205.0,255.0},
-		{35.0,128.0}};
-float b[l][w] = {{0.0,0.0},
-		{100.0,100.0}};
+float r[l][w] = {{128.0,128.0,128.0,128.0},
+		{128.0,128.0,128.0,128.0}};
+float g[l][w] = {{128.0,128.0,128.0,128.0},
+		{128.0,128.0,128.0,128.0}};
+float b[l][w] = {{0.0,0.0, 0.0, 0.0},
+		{0.0,0.0, 0.0, 0.0}};
 float y[l][w];
 float cr[cl][cw];
 float cb[cl][cw];
@@ -22,9 +22,12 @@ void RGBtoYCC(float r[l][w], float g[l][w], float b[l][w], float y[l][w], float 
 			gval = g[i][j];
 			bval = b[i][j];
 			y[i][j] = 16.0 + 0.257*rval + 0.504*gval + 0.098*bval;
-			if (i % 2 == 0 && j % 2 == 0){
-				cr[i/2][j/2] = 128.0 + 0.439*rval - 0.368*gval - 0.071*bval;
-				cb[i/2][j/2] = 128.0 - 0.148*rval - 0.291*gval + 0.439*bval;
+			cr[i/2][j/2] += 128.0 + 0.439*rval - 0.368*gval - 0.071*bval;
+			cb[i/2][j/2] += 128.0 - 0.148*rval - 0.291*gval + 0.439*bval;
+
+			if (i % 2 == 1 && j % 2 == 1){
+				cr[i/2][j/2] = cr[i/2][j/2]/4;
+				cb[i/2][j/2] = cb[i/2][j/2]/4;
 			}
 		}
 	}	
@@ -45,6 +48,8 @@ void YCCtoRGB(float r[l][w], float g[l][w], float b[l][w], float y[l][w], float 
 	}
 	
 }
+
+
 
 void print_values(float r[l][w],float g[l][w],float b[l][w])
 {
