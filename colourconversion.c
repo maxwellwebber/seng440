@@ -2,7 +2,7 @@
 #define w 2
 #define cl 1
 #define cw 1
-
+#include <stdio.h>
 float r[l][w] = {{128.0,128.0},
 		{35.0,35.0}};
 float g[l][w] = {{205.0,255.0},
@@ -24,7 +24,7 @@ void RGBtoYCC(float r[l][w], float g[l][w], float b[l][w], float y[l][w], float 
 			y[i][j] = 16.0 + 0.257*rval + 0.504*gval + 0.098*bval;
 			if (i % 2 == 0 && j % 2 == 0){
 				cr[i/2][j/2] = 128.0 + 0.439*rval - 0.368*gval - 0.071*bval;
-				cb[i/2][j/2] = 128.0 - 0.148*rval + 0.291*gval + 0.439*bval;
+				cb[i/2][j/2] = 128.0 - 0.148*rval - 0.291*gval + 0.439*bval;
 			}
 		}
 	}	
@@ -43,11 +43,28 @@ void YCCtoRGB(float r[l][w], float g[l][w], float b[l][w], float y[l][w], float 
 			b[i][j] = 1.164*(yval - 16) + 2.018*(cbval - 128);
 		}
 	}
+	
 }
 
+void print_values(float r[l][w],float g[l][w],float b[l][w])
+{
+	/*print function to be used for debugging purposes only*/
+	int i, j;
+	for (i = 0; i < l; i++) 
+	{
+		for (j = 0; j < w; j++) 
+		{
+			printf("{%.3f %.3f %.3f} ", r[i][j],g[i][j],b[i][j]);
+		}	
+		printf("\n");
+	}
+}
 int main(void){
+	print_values(r,g,b);
 	RGBtoYCC(r,g,b,y,cr,cb);
 	YCCtoRGB(r,g,b,y,cr,cb);
+	printf("\n");
+	print_values(r,g,b);
 	return 0;
 }
 
