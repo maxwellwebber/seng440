@@ -20,8 +20,6 @@ unsigned char y[l][w];
 unsigned char cr[cl][cw];
 unsigned char cb[cl][cw];
 
-void print_values(unsigned char r[l][w],unsigned char g[l][w],unsigned char b[l][w]);
-
 void RGBtoYCC(unsigned char r[l][w], unsigned char g[l][w], unsigned char b[l][w], unsigned char y[l][w], unsigned char cr[cl][cw], unsigned char cb[cl][cw]){
 	int i, j;
 	unsigned int rval, gval, bval;
@@ -58,49 +56,13 @@ void YCCtoRGB(unsigned char r[l][w], unsigned char g[l][w], unsigned char b[l][w
 	
 }
 
-void create_ppm_file(unsigned char r[l][w], unsigned char g[l][w], unsigned char b[l][w])
-{
-	FILE *fp;
-	int i,j;
-	fp = fopen("out.ppm","w");
-	fwrite("P6 ",1,3,fp);
-	char str[15];
-	int size = 6;
-	if (l < 10) size += 1;
-	else if (l < 100) size += 2;
-	else if (l < 1000) size += 3;
-	else if (l < 10000) size += 4;
-	if (w < 10) size += 1;
-	else if (w < 100) size += 2;
-	else if (w < 1000) size += 3;
-	else if (w < 10000) size += 4;
-	sprintf(str,"%d %d %d\n",w,l,255);
-	fwrite(str,1,size,fp);
-	for (i = 0; i < l; i++) {
-		for (j = 0; j < w; j++) {
-			fwrite(&(r[i][j]),1,1,fp);
-			fwrite(&(g[i][j]),1,1,fp);
-			fwrite(&(b[i][j]),1,1,fp);
-		}
-	}
-	fclose(fp);
-
+long get_time(){
+	//helper function to get the current timestamp in microseconds
+	struct timeval currentTime;
+	gettimeofday(&currentTime, NULL);
+	return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
 }
 
-void print_values(unsigned char r[l][w],unsigned char g[l][w],unsigned char b[l][w])
-{
-	/*print function to be used for debugging purposes only*/
-	int i, j;
-	for (i = 0; i < l; i++) 
-	{
-		for (j = 0; j < w; j++) 
-		{
-			printf("{%d %d %d} ", r[i][j],g[i][j],b[i][j]);
-		}	
-		printf("\n");
-	}
-	printf("\n");
-}
 int main(void){
 	int i;
 	time_t t1 = get_time();

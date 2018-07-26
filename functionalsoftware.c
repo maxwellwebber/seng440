@@ -3,6 +3,7 @@
 #define cl 1
 #define cw 2
 #include <stdio.h>
+#include <sys/time.h>
 float r[l][w] = {{128.0,128.0,128.0,128.0},
 		{128.0,128.0,128.0,128.0}};
 float g[l][w] = {{128.0,128.0,128.0,128.0},
@@ -64,12 +65,24 @@ void print_values(float r[l][w],float g[l][w],float b[l][w])
 		printf("\n");
 	}
 }
+
+long get_time(){
+	//helper function to get the current timestamp in microseconds
+	struct timeval currentTime;
+	gettimeofday(&currentTime, NULL);
+	return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
+}
+
 int main(void){
-	print_values(r,g,b);
-	RGBtoYCC(r,g,b,y,cr,cb);
-	YCCtoRGB(r,g,b,y,cr,cb);
-	printf("\n");
-	print_values(r,g,b);
+	int i;
+	time_t t1 = get_time();
+	for (i = 0; i < 200000; i++) {
+		RGBtoYCC(r,g,b,y,cr,cb);
+		YCCtoRGB(r,g,b,y,cr,cb);
+	}
+	time_t t2 = get_time();
+	long time = t2-t1;
+	printf("%d\n",time);
 	return 0;
 }
 
