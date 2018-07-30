@@ -21,6 +21,7 @@ unsigned char cr[cl][cw];
 unsigned char cb[cl][cw];
 
 void print_values(unsigned char r[l][w],unsigned char g[l][w],unsigned char b[l][w]);
+unsigned char interpolate(unsigned char c[cl][cw], int i, int j);
 
 void RGBtoYCC(unsigned char r[l][w], unsigned char g[l][w], unsigned char b[l][w], unsigned char y[l][w], unsigned char cr[cl][cw], unsigned char cb[cl][cw]){
 	int i, j;
@@ -55,6 +56,25 @@ void YCCtoRGB(unsigned char r[l][w], unsigned char g[l][w], unsigned char b[l][w
 			b[i][j] = bval > 1000 ? 0: bval;
 		}
 	}
+	
+}
+
+unsigned char interpolate(unsigned char c[cl][cw], int i, int j){
+	if (i % 2 + j % 2 == 0){
+		return c[i/2][j/2];
+	}
+	int pixels = 0;
+	int val = 0;
+	if (i/2 > 0){
+		val += c[i/2 - 1][j/2];
+		pixels++;
+	}
+	if (i/2 < cl-1){
+		val += c[i/2][j/2-1];
+		pixels++;
+	}
+	val += c[i/2][j/2];
+	pixels++;
 	
 }
 
